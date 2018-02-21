@@ -16,7 +16,7 @@ public class Main {
             int Attempts = 10;
             System.out.println("I think of number from 1 to 100. You have " + Attempts + " attempts!");
             System.out.println("Good luck!");
-            //System.out.println(RNum);
+
 
 
             for (int i = 0; i < Attempts; i++) {
