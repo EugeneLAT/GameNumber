@@ -42,6 +42,7 @@ public class Main {
             System.out.println("Do you want to play again? ( Y / N )");
             System.out.print("Answer: ");
             Answer = scanner.next();
+
             if (Answer.equals("N")){
                 System.out.println("Goodbye!");
                 return;
