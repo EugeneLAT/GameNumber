@@ -1,110 +1,125 @@
 package TsiJava;
 
-import java.util.InputMismatchException;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class Main {
 
     static Scanner scanner = new Scanner(System.in);
+    static Random random = new Random();
 
     public static void main(String[] args) {
+
+        ArrayList<GameResult> leaderboard = new ArrayList<>();
         try {
 
-            Random random = new Random();
+            String answer;
 
-            String Answer;
             do {
-                int RNum = random.nextInt(100) + 1;
-                int Attempts = 10;
-                System.out.println("I think of number from 1 to 100. You have " + Attempts + " attempts!");
-                System.out.println("Good luck!");
-                System.out.println(RNum);
 
-                for (int i = 0; i < Attempts; i++) {
+                String name;
 
-                    System.out.println("Its your " + (i + 1) + " try!");
-                    System.out.print("Please add your number: ");
+                System.out.println("Hello!");
+                System.out.println("What is your name?");
+                System.out.print("My name is: ");
+                name = scanner.next();
 
-                    int UserNum = askNumber();
 
-                    if (UserNum > RNum) {
-                        System.out.println("Your number " + UserNum + " are bigger than my!");
-                    } else if (UserNum < RNum) {
-                        System.out.println("Your number " + UserNum + " are smaller than my!");
-                    } else if (UserNum == RNum) {
-                        System.out.println("Congratulate!");
-                        break;
-                    }
-                    if (i == Attempts - 1) {
-                        System.out.println("Sorry! You lost all " + Attempts + " attempts!");
-                    }
+                GameResult r = doGame(name);
+                if (r != null) {
+                    leaderboard.add(r);
                 }
+
 
                 System.out.println("Do you want to play again? ( Yes / No )");
                 System.out.print("Answer: ");
-                Answer = answer();
+                answer = askAnswer();
 
-                if (Answer.equals("No")) {
-                    System.out.println("Goodbye!");
-                    return;
-                }
+            } while (answer.equals("Yes"));
 
-
-            } while (Answer.equals("Yes"));
-
-        }catch (NoSuchElementException i){
+        } catch (NoSuchElementException i) {
             System.out.println("Goodbye!");
-            return;
         }
+        for (GameResult r : leaderboard) {
+            System.out.println("Name: " + r.userName + "\t Attempts: " + r.attempts);
+        }
+        System.out.println("Goodbye!");
     }
-//    static int askNumber() {
-//        int number;
-//        do {
-//            number = scanner.nextInt();
-//            if (number > 100 || number < 1) {
-//                System.out.println("WRONG! Try again: from 1 to 100!");
-//                System.out.print("Please add your number: ");
-//            }
-//        } while (number > 100 || number < 1);
-//
-//        return number;
-//    }
 
-        static int askNumber () {
-            for (; ; ) {
-                try {
-                    int number = scanner.nextInt();
-                    if (number <= 100 && number >= 1) {
-                        return number;
-                    }
-                } catch (InputMismatchException i) {
-                    scanner.next();
-                    System.out.println("Oops!");
+    private static GameResult doGame(String userName) {
+        int RNum = random.nextInt(100) + 1;
+        int Attempts = 10;
+        long startTime = System.currentTimeMillis();
 
+
+        System.out.println("Hello " + userName + "!");
+        System.out.println("I think of number from 1 to 100. You have " + Attempts + " attempts!");
+        System.out.println("Good luck!");
+        System.out.println(RNum);
+
+
+        GameResult result = new GameResult();
+        result.userName = userName;
+
+
+
+        for (int i = 1; i <= Attempts; i++) {
+
+            System.out.println("Its your " + i + " try!");
+            System.out.print("Please add your number: ");
+
+            int UserNum = askNumber();
+
+            if (UserNum > RNum) {
+                System.out.println("Your number " + UserNum + " are bigger than my!");
+            } else if (UserNum < RNum) {
+                System.out.println("Your number " + UserNum + " are smaller than my!");
+            } else if (UserNum == RNum) {
+                System.out.println("Congratulate!");
+                result.attempts = i;
+                long finishTime = System.currentTimeMillis();
+                result.playTime = startTime - finishTime;
+                return result;
+            }
+
+        }
+        System.out.println("Sorry! You lost all " + Attempts + " attempts!");
+        return null;
+    }
+
+    static int askNumber() {
+        for (; ; ) {
+            try {
+                int number = scanner.nextInt();
+                if (number <= 100 && number >= 1) {
+                    return number;
                 }
-
-                System.out.println("WRONG! Try again: from 1 to 100!");
-                System.out.print("Please add your number: ");
+            } catch (InputMismatchException i) {
+                scanner.next();
+                System.out.println("Oops!");
 
             }
 
+            System.out.println("WRONG! Try again: from 1 to 100!");
+            System.out.print("Please add your number: ");
 
         }
 
-        static String answer () {
-            String word = scanner.next();
 
-            if (word.equals("Yes") || word.equals("No")) {
-                return word;
-            } else {
-                do {
-                    System.out.println("I don't understand!");
-                    System.out.print("Please write: Yes or No!");
-                } while (word.equals("Yes") || word.equals("No"));
-            }
-            return word;
-        }
     }
+
+    static String askAnswer() {
+        String word = scanner.next();
+        if (word.equals("Yes") || word.equals("No")) {
+            return word;
+        } else {
+            do {
+                System.out.println("I don't understand!");
+                System.out.println("Please write: Yes or No!");
+                System.out.print("Again: ");
+                word = scanner.next();
+            } while (!(word.equals("Yes") || word.equals("No")));
+        }
+        return word;
+    }
+}
 
