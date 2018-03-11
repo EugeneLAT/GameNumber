@@ -10,6 +10,7 @@ public class Main {
     public static void main(String[] args) {
 
         ArrayList<GameResult> leaderboard = new ArrayList<>();
+
         try {
 
             String answer;
@@ -39,8 +40,11 @@ public class Main {
         } catch (NoSuchElementException i) {
             System.out.println("Goodbye!");
         }
+
+        System.out.println("Leaders Board!");
+
         for (GameResult r : leaderboard) {
-            System.out.println("Name: " + r.userName + "\t Attempts: " + r.attempts);
+            System.out.println("Name: " + r.userName + "\t Attempts: " + r.attempts + "\t Time: " + r.playTime);
         }
         System.out.println("Goodbye!");
     }
@@ -77,7 +81,7 @@ public class Main {
                 System.out.println("Congratulate!");
                 result.attempts = i;
                 long finishTime = System.currentTimeMillis();
-                result.playTime = startTime - finishTime;
+                result.playTime = (finishTime - startTime)/1000;
                 return result;
             }
 
