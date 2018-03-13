@@ -15,13 +15,12 @@ public class Main {
 
         ArrayList<GameResult> leaderboard = new ArrayList<>();
         loadLeaderBoard(leaderboard);
-        checkLeaderBoard(leaderboard);
         try {
 
             String answer;
 
             do {
-
+                String menu;
                 String name;
 
                 System.out.println("Hello!");
@@ -30,13 +29,46 @@ public class Main {
                 name = scanner.next();
 
 
-                GameResult r = doGame(name);
-                if (r != null) {
-                    leaderboard.add(r);
+                System.out.println("Menu:");
+                System.out.println("1. New Game!");
+                System.out.println("2. Check Leader-Board!");
+                System.out.println("3. Exit!");
+                System.out.print("Your choose: ");
+                menu = askAnswerMenu();
+                switch (menu) {
+                    case "1":
+                        GameResult r = doGame(name);
+                        if (r != null) {
+                            leaderboard.add(r);
+                        }
+                        break;
+                    case "2":
+                        String menuCase2;
+                        System.out.println("1. All Players!");
+                        System.out.println("2. TOP 5!");
+                        System.out.println("3. Back!");
+                        System.out.println("4. Exit!");
+                        System.out.print("Your choose: ");
+                        menuCase2 = askAnswerMenuCase2();
+                        switch (menuCase2) {
+                            case "1":
+                                printLeaderBoard(leaderboard);
+                                break;
+                            case "2":
+                                printLeaderBoardTopFive(leaderboard);
+                                break;
+                            case "3":
+                                //!!!!!///!!!!///!!!!///!!!!///!!!!///
+                                break;
+                            case "4":
+                                return;
+                        }
+                        break;
+                    case "3":
+                        return;
                 }
 
-
-                System.out.println("Do you want to play again? ( Yes / No )");
+                System.out.println("Do you want restart? ( Yes / No )");
                 System.out.print("Answer: ");
                 answer = askAnswer();
 
@@ -50,43 +82,10 @@ public class Main {
         leaderboard.sort(Comparator
                 .<GameResult>comparingInt(gameResult -> gameResult.attempts)
                 .<GameResult>thenComparingDouble(gameResult -> gameResult.playTime));
-        printLeaderBoard(leaderboard);
         saveLeaderBoard(leaderboard);
 
         System.out.println("Goodbye!");
     }
-
-
-    private static void checkLeaderBoard(ArrayList<GameResult> leaderboard) {
-        String answer;
-
-        System.out.println("Do you want check Leader Board? Yes/No");
-        System.out.print("Answer: ");
-        answer = askAnswerBoard();
-
-
-        if (answer.equals("Yes")) {
-            printLeaderBoard(leaderboard);
-        }
-
-
-    }
-
-    private static String askAnswerBoard() {
-        String word = scanner.next();
-        if (word.equals("Yes") || word.equals("No")) {
-            return word;
-        } else {
-            do {
-                System.out.println("I don't understand!");
-                System.out.println("Please write: Yes or No!");
-                System.out.print("Again: ");
-                word = scanner.next();
-            } while (!(word.equals("Yes") || word.equals("No")));
-        }
-        return word;
-    }
-
 
     private static GameResult doGame(String userName) {
         int RNum = random.nextInt(100) + 1;
@@ -94,7 +93,7 @@ public class Main {
         long startTime = System.currentTimeMillis();
 
 
-        System.out.println("Hello " + userName + "!");
+        System.out.println(userName + "!");
         System.out.println("I think of number from 1 to 100. You have " + Attempts + " attempts!");
         System.out.println("Good luck!");
         System.out.println(RNum);
@@ -164,9 +163,71 @@ public class Main {
         return word;
     }
 
+    private static String askAnswerBoard() {
+        String word = scanner.next();
+        if (word.equals("Yes") || word.equals("No")) {
+            return word;
+        } else {
+            do {
+                System.out.println("I don't understand!");
+                System.out.println("Please write: Yes or No!");
+                System.out.print("Again: ");
+                word = scanner.next();
+            } while (!(word.equals("Yes") || word.equals("No")));
+        }
+        return word;
+    }
+
+    private static String askAnswerMenu() {
+        String word = scanner.next();
+        if (word.equals("1") || word.equals("2") || word.equals("3")) {
+            return word;
+        } else {
+            do {
+                System.out.println("I don't understand!");
+                System.out.println("Please write: 1 or 2 or 3!");
+                System.out.println("1. New Game!");
+                System.out.println("2. Check Leader-Board!");
+                System.out.println("3. Exit!");
+                System.out.print("Again: ");
+                word = scanner.next();
+            } while (!(word.equals("1") || word.equals("2") || word.equals("3")));
+        }
+        return word;
+    }
+
+    private static String askAnswerMenuCase2() {
+        String word = scanner.next();
+        if (word.equals("1") || word.equals("2") || word.equals("3") || word.equals("4")) {
+            return word;
+        } else {
+            do {
+                System.out.println("I don't understand!");
+                System.out.println("Please write: 1 or 2 or 3 or 4!");
+                System.out.println("1. All Players!");
+                System.out.println("2. TOP 5!");
+                System.out.println("3. Back!");
+                System.out.println("4. Exit!");
+                System.out.print("Again: ");
+                word = scanner.next();
+            } while (!(word.equals("1") || word.equals("2") || word.equals("3")));
+        }
+        return word;
+    }
+
     private static void printLeaderBoard(ArrayList<GameResult> leaderboard) {
         for (GameResult r : leaderboard) {
             System.out.println("Name: " + r.userName + "\t Attempts: " + r.attempts + "\t Time: " + r.playTime);
+        }
+
+    }
+
+    private static void printLeaderBoardTopFive(ArrayList<GameResult> leaderboard) {
+
+        for (GameResult r : leaderboard) {
+            for (int i = 1; i <= 5;i++) {
+                System.out.println("Name: " + r.userName + "\t Attempts: " + r.attempts + "\t Time: " + r.playTime);
+            }
         }
 
     }
