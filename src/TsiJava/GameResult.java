@@ -4,6 +4,6 @@ public class GameResult {
 
     String userName;
     int attempts;
-    long playTime;
+    double playTime;
 
 }

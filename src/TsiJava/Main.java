@@ -1,16 +1,21 @@
 package TsiJava;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 public class Main {
 
     static Scanner scanner = new Scanner(System.in);
     static Random random = new Random();
+    static File leaderBoardFile = new File("Leader-Board.txt");
 
     public static void main(String[] args) {
 
         ArrayList<GameResult> leaderboard = new ArrayList<>();
-
+        loadLeaderBoard(leaderboard);
+        checkLeaderBoard(leaderboard);
         try {
 
             String answer;
@@ -42,12 +47,46 @@ public class Main {
         }
 
         System.out.println("Leaders Board!");
+        leaderboard.sort(Comparator
+                .<GameResult>comparingInt(gameResult -> gameResult.attempts)
+                .<GameResult>thenComparingDouble(gameResult -> gameResult.playTime));
+        printLeaderBoard(leaderboard);
+        saveLeaderBoard(leaderboard);
 
-        for (GameResult r : leaderboard) {
-            System.out.println("Name: " + r.userName + "\t Attempts: " + r.attempts + "\t Time: " + r.playTime);
-        }
         System.out.println("Goodbye!");
     }
+
+
+    private static void checkLeaderBoard(ArrayList<GameResult> leaderboard) {
+        String answer;
+
+        System.out.println("Do you want check Leader Board? Yes/No");
+        System.out.print("Answer: ");
+        answer = askAnswerBoard();
+
+
+        if (answer.equals("Yes")) {
+            printLeaderBoard(leaderboard);
+        }
+
+
+    }
+
+    private static String askAnswerBoard() {
+        String word = scanner.next();
+        if (word.equals("Yes") || word.equals("No")) {
+            return word;
+        } else {
+            do {
+                System.out.println("I don't understand!");
+                System.out.println("Please write: Yes or No!");
+                System.out.print("Again: ");
+                word = scanner.next();
+            } while (!(word.equals("Yes") || word.equals("No")));
+        }
+        return word;
+    }
+
 
     private static GameResult doGame(String userName) {
         int RNum = random.nextInt(100) + 1;
@@ -65,7 +104,6 @@ public class Main {
         result.userName = userName;
 
 
-
         for (int i = 1; i <= Attempts; i++) {
 
             System.out.println("Its your " + i + " try!");
@@ -81,7 +119,7 @@ public class Main {
                 System.out.println("Congratulate!");
                 result.attempts = i;
                 long finishTime = System.currentTimeMillis();
-                result.playTime = (finishTime - startTime)/1000;
+                result.playTime = (finishTime - startTime) / 1000.0;
                 return result;
             }
 
@@ -124,6 +162,43 @@ public class Main {
             } while (!(word.equals("Yes") || word.equals("No")));
         }
         return word;
+    }
+
+    private static void printLeaderBoard(ArrayList<GameResult> leaderboard) {
+        for (GameResult r : leaderboard) {
+            System.out.println("Name: " + r.userName + "\t Attempts: " + r.attempts + "\t Time: " + r.playTime);
+        }
+
+    }
+
+    private static void saveLeaderBoard(ArrayList<GameResult> leaderboard) {
+        try (PrintWriter out = new PrintWriter(leaderBoardFile)) {
+            for (GameResult r : leaderboard) {
+                out.println(r.userName + "\t" + r.attempts + "\t" + r.playTime);
+            }
+        } catch (IOException e) {
+            System.out.println("Something wrong!");
+        }
+
+    }
+
+    private static void loadLeaderBoard(ArrayList<GameResult> leaderboard) {
+        if (!leaderBoardFile.exists()) {
+            return;
+        }
+        try (Scanner in = new Scanner(leaderBoardFile)) {
+
+            while (in.hasNext()) {
+                GameResult r = new GameResult();
+                r.userName = in.next();
+                r.attempts = in.nextInt();
+                r.playTime = Double.parseDouble(in.next());
+                leaderboard.add(r);
+            }
+
+        } catch (IOException e) {
+            System.out.println("Something wrong while reading file!");
+        }
     }
 }
 
