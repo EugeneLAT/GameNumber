@@ -51,6 +51,7 @@ public class Main {
                 case "1":
                     System.out.println("1. Play nickname: " + name);
                     System.out.println("2. Another nickname!");
+                    System.out.println("3. Back!");
                     System.out.print("Your choose: ");
                     choise = askAnswer();
 
@@ -60,7 +61,7 @@ public class Main {
                             leaderboard.add(r);
                             saveLeaderBoard(leaderboard);
                         }
-                    } else {
+                    } else if (choise == 2){
                         System.out.println("Hello!");
                         System.out.println("What is your nickname?");
                         System.out.print("My nickname is: ");
@@ -70,8 +71,9 @@ public class Main {
                             leaderboard.add(r);
                             saveLeaderBoard(leaderboard);
                         }
+                    }else{
+                        break;
                     }
-
 
                     break;
                 case "2":
@@ -178,7 +180,7 @@ public class Main {
     private static Integer askAnswer() {
 
         int choise = scanner.nextInt();
-        if (choise == 1 || choise == 2) {
+        if (choise == 1 || choise == 2 || choise == 3) {
             return choise;
         } else {
             do {
@@ -186,7 +188,7 @@ public class Main {
                 System.out.println("Please write: 1 or 2!");
                 System.out.print("Again: ");
                 choise = scanner.nextInt();
-            } while (!(choise == 1 || choise == 2));
+            } while (!(choise == 1 || choise == 2 || choise == 3));
         }
         return choise;
     }
