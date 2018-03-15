@@ -15,77 +15,80 @@ public class Main {
 
         ArrayList<GameResult> leaderboard = new ArrayList<>();
         loadLeaderBoard(leaderboard);
+
         try {
-
-            String answer;
-
-            do {
-                String menu;
-                String name;
-
-                System.out.println("Hello!");
-                System.out.println("What is your name?");
-                System.out.print("My name is: ");
-                name = scanner.next();
-
-
-                System.out.println("Menu:");
-                System.out.println("1. New Game!");
-                System.out.println("2. Check Leader-Board!");
-                System.out.println("3. Exit!");
-                System.out.print("Your choose: ");
-                menu = askAnswerMenu();
-                switch (menu) {
-                    case "1":
-                        GameResult r = doGame(name);
-                        if (r != null) {
-                            leaderboard.add(r);
-                        }
-                        break;
-                    case "2":
-                        String menuCase2;
-                        System.out.println("1. All Players!");
-                        System.out.println("2. TOP 5!");
-                        System.out.println("3. Back!");
-                        System.out.println("4. Exit!");
-                        System.out.print("Your choose: ");
-                        menuCase2 = askAnswerMenuCase2();
-                        switch (menuCase2) {
-                            case "1":
-                                printLeaderBoard(leaderboard);
-                                break;
-                            case "2":
-                                printLeaderBoardTopFive(leaderboard);
-                                break;
-                            case "3":
-                                //!!!!!///!!!!///!!!!///!!!!///!!!!///
-                                break;
-                            case "4":
-                                return;
-                        }
-                        break;
-                    case "3":
-                        return;
-                }
-
-                System.out.println("Do you want restart? ( Yes / No )");
-                System.out.print("Answer: ");
-                answer = askAnswer();
-
-            } while (answer.equals("Yes"));
+                printMenu(leaderboard);
 
         } catch (NoSuchElementException i) {
             System.out.println("Goodbye!");
         }
 
-        System.out.println("Leaders Board!");
         leaderboard.sort(Comparator
                 .<GameResult>comparingInt(gameResult -> gameResult.attempts)
                 .<GameResult>thenComparingDouble(gameResult -> gameResult.playTime));
         saveLeaderBoard(leaderboard);
 
-        System.out.println("Goodbye!");
     }
+
+    private static void printMenu(ArrayList<GameResult> leaderboard) {
+        String name;
+        String menu;
+
+        System.out.println("Hello!");
+        System.out.println("What is your name?");
+        System.out.print("My name is: ");
+        name = scanner.next();
+
+        do {
+
+
+
+
+            System.out.println("Menu:");
+            System.out.println("1. New Game!");
+            System.out.println("2. Check Leader-Board!");
+            System.out.println("3. Exit!");
+            System.out.print("Your choose: ");
+            menu = askAnswerMenu();
+
+            switch (menu) {
+                case "1":
+                    GameResult r = doGame(name);
+                    if (r != null) {
+                        leaderboard.add(r);
+                    }
+                    break;
+                case "2":
+                    String menuCase2;
+                    System.out.println("1. All Players!");
+                    System.out.println("2. TOP 5!");
+                    System.out.println("3. Back!");
+                    System.out.println("4. Exit!");
+                    System.out.print("Your choose: ");
+                    menuCase2 = askAnswerMenuCase2();
+                    switch (menuCase2) {
+                        case "1":
+                            printLeaderBoard(leaderboard);
+                            break;
+                        case "2":
+                            printLeaderBoardTopFive(leaderboard);
+                            break;
+                        case "3":
+                            //!!!!!///!!!!///!!!!///!!!!///!!!!///
+                            break;
+                        case "4":
+                            System.out.println("Goodbye! " + name + "!");
+                            return;
+                    }
+                    break;
+                case "3":
+                    System.out.println("Goodbye!"+ name+ "!");
+
+                    return;
+            }
+        }while (true);
+    }
+
 
     private static GameResult doGame(String userName) {
         int RNum = random.nextInt(100) + 1;
@@ -225,9 +228,9 @@ public class Main {
     private static void printLeaderBoardTopFive(ArrayList<GameResult> leaderboard) {
 
         for (GameResult r : leaderboard) {
-            for (int i = 1; i <= 5;i++) {
-                System.out.println("Name: " + r.userName + "\t Attempts: " + r.attempts + "\t Time: " + r.playTime);
-            }
+
+            System.out.println("Name: " + r.userName + "\t Attempts: " + r.attempts + "\t Time: " + r.playTime);
+
         }
 
     }
@@ -261,5 +264,7 @@ public class Main {
             System.out.println("Something wrong while reading file!");
         }
     }
+
+
 }
 
